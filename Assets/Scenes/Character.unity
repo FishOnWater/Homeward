@@ -158,6 +158,8 @@ MonoBehaviour:
   movespeed: 10
   JumpForce: 10
   isGrounded: 0
+  cam: {fileID: 1067744817}
+  crosshairs: {fileID: 1720711740}
 --- !u!50 &279372344
 Rigidbody2D:
   serializedVersion: 4
@@ -570,7 +572,6 @@ GameObject:
   - component: {fileID: 1067744818}
   - component: {fileID: 1067744817}
   - component: {fileID: 1067744816}
-  - component: {fileID: 1067744819}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -643,19 +644,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1067744819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067744815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ff5c5e683cc05745bae51175694ad0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  crosshairs: {fileID: 1720711740}
 --- !u!1 &1719717409
 GameObject:
   m_ObjectHideFlags: 0
