@@ -6,23 +6,23 @@ public class Scr_mov : MonoBehaviour
 {
     public float movespeed = 0.025f;
     public float JumpForce = 10f;
-    public bool isGrounded = false;
+    
 
     public Camera cam;
     public GameObject crosshairs;
-
+    Vector3 movement;
     Vector2 mousePos;
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
         
     // Update is called once per frame
     void Update()
     {      
-        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
-        transform.Translate(movement * (Time.deltaTime * movespeed),Space.World);
+        movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
+        
 
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
@@ -30,9 +30,19 @@ public class Scr_mov : MonoBehaviour
         Vector2 lookDir = mousePos - gameObject.GetComponent<Rigidbody2D>().position;
         crosshairs.transform.position = new Vector2(mousePos.x, mousePos.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Jump();
+            //vai ser necessario optimizar
+            if (isGrounded())
+            {
+                Jump();
+            }
+            else if(IsOnWallLeft()){
+                WallJumpRight();
+            }else if (IsOnWallRight())
+            {
+                WallJumpLeft();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -42,9 +52,28 @@ public class Scr_mov : MonoBehaviour
         }
     }
 
+
+    private void FixedUpdate()
+    {
+        if (IsOnWallLeft()) Debug.Log("Hitting Left Wall");
+        if (IsOnWallRight()) Debug.Log("Hitting Right Wall");
+        transform.Translate(movement * (Time.deltaTime * movespeed), Space.World);
+    }
+
     void Jump()
     {
         gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
+    }
+
+
+    private void WallJumpRight()
+    {
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(JumpForce, JumpForce), ForceMode2D.Impulse);
+    }
+
+    private void WallJumpLeft()
+    {
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-JumpForce, JumpForce), ForceMode2D.Impulse);
     }
 
     //void ShootHook(float xpos, float ypos)
@@ -70,5 +99,64 @@ public class Scr_mov : MonoBehaviour
 
             gameObject.GetComponent<Rigidbody2D>().AddForce((direction * 5), ForceMode2D.Impulse);
         }
+    }
+
+
+    private bool isGrounded()
+    {
+        float lenghtToSearch = 0.1f;
+        float colliderThreshold = 0.001f;
+
+        Vector2 linestart = new Vector2(this.transform.position.x, this.transform.position.y - GetComponent<Renderer>().bounds.extents.y - colliderThreshold);
+        Vector2 vecToSearch = new Vector2(this.transform.position.x, linestart.y - lenghtToSearch);
+
+        RaycastHit2D hitdown = Physics2D.Linecast(linestart, vecToSearch);
+        return hitdown;
+    }
+
+
+
+    private bool IsOnWallLeft()
+    {
+        bool retval = false;
+        float SideLenght = 0.1f;
+        float ColliderThreshold = 0.01f;
+
+        Vector2 linestart = new Vector2(this.transform.position.x - GetComponent<Renderer>().bounds.extents.x - ColliderThreshold,0f);
+        Vector2 SearchVector = new Vector2(linestart.x-SideLenght,this.transform.position.y);
+
+        RaycastHit2D hitleft = Physics2D.Linecast(linestart, SearchVector);
+        retval = hitleft;
+
+        if (retval)
+        {
+            if (hitleft.collider.GetComponent<NoWallJump>())
+            {
+                retval = false;
+            }
+        }
+        return retval;
+    }
+
+    private bool IsOnWallRight()
+    {
+        bool retval = false;
+        float SideLenght = 0.1f;
+        float ColliderThreshold = 0.01f;
+
+        Vector2 linestart = new Vector2(this.transform.position.x + GetComponent<Renderer>().bounds.extents.x + ColliderThreshold, 0f);
+        Vector2 SearchVector = new Vector2(linestart.x + SideLenght, this.transform.position.y);
+
+        RaycastHit2D hitleft = Physics2D.Linecast(linestart, SearchVector);
+        retval = hitleft;
+
+        if (retval)
+        {
+            if (hitleft.collider.GetComponent<NoWallJump>())
+            {
+                retval = false;
+            }
+        }
+        return retval;
     }
 }
