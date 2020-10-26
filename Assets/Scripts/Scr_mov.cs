@@ -4,50 +4,56 @@ using UnityEngine;
 
 public class Scr_mov : MonoBehaviour
 {
-    public float movespeed = 0.025f;
-    public float JumpForce = 10f;
-    
+    public float movespeed = 15;
+    public float JumpForce = 2f;
+    public float maxSpeed = 30;
+    public float JumpDuration;
+    public bool ShootH = false;
 
+    public int action;
     public Camera cam;
     public GameObject crosshairs;
+    public Rigidbody2D rb;
     Vector3 movement;
     Vector2 mousePos;
+    public Vector2 lookDir;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        action = 0;
+        rb = gameObject.GetComponent<Rigidbody2D>();
     }
         
     // Update is called once per frame
     void Update()
-    {      
-        movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
-        
+    {
 
+        movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         //cálculo da direção do rato (sim, era mesmo só isto)
-        Vector2 lookDir = mousePos - gameObject.GetComponent<Rigidbody2D>().position;
+        lookDir = mousePos - rb.position;
         crosshairs.transform.position = new Vector2(mousePos.x, mousePos.y);
 
         if (Input.GetKeyDown(KeyCode.Space))
-        {
-            //vai ser necessario optimizar
+        {           
             if (isGrounded())
             {
-                Jump();
+               action = 1;
             }
             else if(IsOnWallLeft()){
-                WallJumpRight();
+                action = 2;
             }else if (IsOnWallRight())
             {
-                WallJumpLeft();
+                action = 3;
             }
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            //ShootHook(Input.mousePosition.x, Input.mousePosition.y);
+            ShootH = true;
             ShootHook(lookDir);
         }
     }
@@ -55,25 +61,50 @@ public class Scr_mov : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         if (IsOnWallLeft()) Debug.Log("Hitting Left Wall");
         if (IsOnWallRight()) Debug.Log("Hitting Right Wall");
+
         transform.Translate(movement * (Time.deltaTime * movespeed), Space.World);
+        switch (action)
+        {
+            case 1:
+                Jump();
+            break;
+
+            case 2:
+                WallJumpRight();
+            break;
+
+            case 3:
+                WallJumpLeft();
+            break;
+
+            default:
+            break;
+        }
+        if (ShootH)
+        {
+            ShootHook(lookDir);
+            ShootH = false;
+        }
+        action = 0;
     }
 
     void Jump()
     {
-        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
     }
 
 
     private void WallJumpRight()
     {
-        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(JumpForce, JumpForce), ForceMode2D.Impulse);
+        rb.velocity = new Vector2(JumpForce, JumpForce);
     }
 
     private void WallJumpLeft()
     {
-        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-JumpForce, JumpForce), ForceMode2D.Impulse);
+        rb.velocity = new Vector2(-JumpForce, JumpForce);
     }
 
     //void ShootHook(float xpos, float ypos)
@@ -97,7 +128,7 @@ public class Scr_mov : MonoBehaviour
             direction.x = hit.point.x - gameObject.transform.position.x;
             direction.y = hit.point.y - gameObject.transform.position.y;
 
-            gameObject.GetComponent<Rigidbody2D>().AddForce((direction * 5), ForceMode2D.Impulse);
+            gameObject.GetComponent<Rigidbody2D>().AddForce((direction * 3), ForceMode2D.Impulse);
         }
     }
 
