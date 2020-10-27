@@ -15,7 +15,7 @@ public class FallingPlatform : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.name.Equals("Cat"))
+        if (col.gameObject.name.Equals("Player"))
         {
             Invoke("DropPlatform", 1f);
             Destroy(gameObject, 2f);
