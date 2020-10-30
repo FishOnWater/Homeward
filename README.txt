@@ -17,7 +17,7 @@ We hope you enjoy this experience!
 Relativo ao projecto:
 
 É importante sabermos usar as branches no nosso projecto, de modo a não misturar trabalho e tornar isto numa experiência horrível de git. 
-Como hão de reparar, se clicarem na branch "main", irá vos aparecer que atualmente exitem duas mais branches, "character" e "blocks". Quem estiver a trabalhar no personagem jogável, usa a branch character para guardar lá as suas mudanças e edições, usando no projeto do Unity a scene "Characater". O mesmo é feito para quem trabalhar nos blocos do jogo, usando para isso a scene "Blocks". De notar que a scene "Game Scene" irá ser onde propriamente juntamos o que foi feito, sendo essa a scene (ou uma das scenes) main.
+Como hão de reparar, se clicarem na branch "master", irá vos aparecer que atualmente exitem duas mais branches, "gameplay" e "level". Quem estiver a melhorar o gameplay da personagem, usa a branch gameplay. Quem estiver a trabalhar nos restantes blocos, inimigos e nível protótipo, usa a branch level.
 
 Comandos de terminal (git bash)
 Para aceder a uma branch: git checkout *branch name*
