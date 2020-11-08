@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class Scr_mov : MonoBehaviour
 {
     public float movespeed = 15;
     public float JumpForce = 2f;
-    public float maxSpeed = 30;
+    public float maxSpeed = 60;
     public float JumpDuration;
     public bool ShootH = false;
 
@@ -64,8 +65,11 @@ public class Scr_mov : MonoBehaviour
 
         if (IsOnWallLeft()) Debug.Log("Hitting Left Wall");
         if (IsOnWallRight()) Debug.Log("Hitting Right Wall");
+        Debug.Log("current speed: " + rb.velocity.magnitude);
+
 
         transform.Translate(movement * (Time.deltaTime * movespeed), Space.World);
+
         switch (action)
         {
             case 1:
@@ -88,6 +92,12 @@ public class Scr_mov : MonoBehaviour
             ShootHook(lookDir);
             ShootH = false;
         }
+        Vector3 vel = rb.velocity;
+        if(vel.magnitude > maxSpeed)
+        {
+            rb.velocity = vel.normalized * maxSpeed;
+        }
+        
         action = 0;
     }
 
@@ -99,12 +109,12 @@ public class Scr_mov : MonoBehaviour
 
     private void WallJumpRight()
     {
-        rb.velocity = new Vector2(JumpForce, JumpForce);
+        rb.velocity = new Vector2(rb.velocity.x, this.JumpForce);
     }
 
     private void WallJumpLeft()
     {
-        rb.velocity = new Vector2(-JumpForce, JumpForce);
+        rb.velocity = new Vector2(-rb.velocity.x, this.JumpForce);
     }
 
     //void ShootHook(float xpos, float ypos)
