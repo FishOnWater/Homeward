@@ -34,6 +34,7 @@ public class Scr_mov : MonoBehaviour
         movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
         //cálculo da direção do rato (sim, era mesmo só isto)
         lookDir = mousePos - rb.position;
         crosshairs.transform.position = new Vector2(mousePos.x, mousePos.y);
