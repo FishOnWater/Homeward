@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class movement : MonoBehaviour
 {
-
-
     public float speed;
     public bool MoveRight;
-
 
     // Update is called once per frame
     void Update()
@@ -23,7 +20,6 @@ public class movement : MonoBehaviour
         }
     }
 
-
     void OnTriggerEnter2D(Collider2D trig)
     {
         if (trig.gameObject.CompareTag("turn"))
@@ -32,12 +28,10 @@ public class movement : MonoBehaviour
             {
                 MoveRight = false;
             }
-
             else
             {
                 MoveRight = true;
             }
-
         }
     }
 }

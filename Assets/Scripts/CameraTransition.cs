@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraTransition : MonoBehaviour
 {
-    Vector2 nextPos;
+    /*Vector2 nextPos;
     Vector2 currentPosition;
     int screen;
     float camSpeed;
@@ -24,8 +24,7 @@ public class CameraTransition : MonoBehaviour
                 nextPos = screen2.position;
                 currentPosition = Vector2.MoveTowards(currentPosition, nextPos, camSpeed * time.deltaTime);
                 screen = 2;
-            }
-            
+            }         
         }
-    }
+    }*/
 }
