@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Wall
+  - Transition1
   - turn
   layers:
   - Default
