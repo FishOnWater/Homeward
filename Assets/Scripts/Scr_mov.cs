@@ -1,22 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class Scr_mov : MonoBehaviour
 {
     public float movespeed = 15;
-    public float JumpForce = 2f;
-    public float maxSpeed = 30;
+    public float JumpForce = 0.5f;
+    public float maxSpeed = 60;
     public float JumpDuration;
-    public bool ShootH = false;
-
+    public bool isjumping;
+    public float Airtimer = 0f;
     public int action;
-    public Camera cam;
-    public GameObject crosshairs;
-    public Rigidbody2D rb;
     Vector3 movement;
     Vector2 mousePos;
-    public Vector2 lookDir;
+
+    [HideInInspector] public bool ShootH = false;
+    [HideInInspector] public Camera cam;
+    [HideInInspector] public GameObject crosshairs;
+    [HideInInspector] public Rigidbody2D rb;
+    [HideInInspector] public Vector2 lookDir;
+    
 
 
     // Start is called before the first frame update
@@ -24,6 +28,7 @@ public class Scr_mov : MonoBehaviour
     {
         action = 0;
         rb = gameObject.GetComponent<Rigidbody2D>();
+        isjumping = false;
     }
         
     // Update is called once per frame
@@ -33,39 +38,50 @@ public class Scr_mov : MonoBehaviour
         movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        #region Grappling
         //cálculo da direção do rato (sim, era mesmo só isto)
         lookDir = mousePos - rb.position;
         crosshairs.transform.position = new Vector2(mousePos.x, mousePos.y);
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {           
-            if (isGrounded())
-            {
-               action = 1;
-            }
-            else if(IsOnWallLeft()){
-                action = 2;
-            }else if (IsOnWallRight())
-            {
-                action = 3;
-            }
-        }
-        
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             ShootH = true;
             ShootHook(lookDir);
         }
+        #endregion
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {         
+            if (isGrounded())
+            {          
+               action = 1;
+            }
+            else if(IsOnWallLeft()){
+                action = 2;
+            }
+            else if (IsOnWallRight())
+            {
+                action = 3;
+            }                          
+        }
+
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                isjumping = false;
+                action = 0;
+            }
+        
+       
     }
 
 
     private void FixedUpdate()
     {
 
-        if (IsOnWallLeft()) Debug.Log("Hitting Left Wall");
-        if (IsOnWallRight()) Debug.Log("Hitting Right Wall");
-
-        transform.Translate(movement * (Time.deltaTime * movespeed), Space.World);
+        
+        #region jumping
         switch (action)
         {
             case 1:
@@ -80,31 +96,63 @@ public class Scr_mov : MonoBehaviour
                 WallJumpLeft();
             break;
 
+
             default:
             break;
         }
+
+
+        
+#endregion
+
         if (ShootH)
         {
             ShootHook(lookDir);
             ShootH = false;
         }
-        action = 0;
+        Vector3 vel = rb.velocity;
+        if(vel.magnitude > maxSpeed)
+        {
+            rb.velocity = vel.normalized * maxSpeed;
+        }
+        transform.Translate(movement * (Time.deltaTime * movespeed), Space.World);
+        
+        if (Airtimer > 0.1f && isGrounded())
+        {
+            Airtimer = 0;
+            isjumping = false;
+            action = 0;
+        }
+        else
+        {
+            Airtimer += Time.deltaTime;  
+        }
+        if (Airtimer > 0.4f)
+        {
+            isjumping = false;
+            action = 0;
+        }
+        
     }
 
     void Jump()
     {
         rb.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
+        isjumping = true;
+  
     }
 
 
     private void WallJumpRight()
     {
-        rb.velocity = new Vector2(JumpForce, JumpForce);
+        rb.velocity = new Vector2(rb.velocity.x, this.JumpForce);
+        isjumping = true;
     }
 
     private void WallJumpLeft()
     {
-        rb.velocity = new Vector2(-JumpForce, JumpForce);
+        rb.velocity = new Vector2(-rb.velocity.x, this.JumpForce);
+        isjumping = true;
     }
 
     //void ShootHook(float xpos, float ypos)
@@ -135,7 +183,7 @@ public class Scr_mov : MonoBehaviour
 
     private bool isGrounded()
     {
-        float lenghtToSearch = 0.1f;
+        float lenghtToSearch = 0.05f;
         float colliderThreshold = 0.001f;
 
         Vector2 linestart = new Vector2(this.transform.position.x, this.transform.position.y - GetComponent<Renderer>().bounds.extents.y - colliderThreshold);
