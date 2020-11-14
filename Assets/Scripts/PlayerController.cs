@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col){
         int transCheck = 0;
+        int screenCheck = 0;
 
         if(col.CompareTag("Transition1")){
             transCheck = 1;
@@ -79,6 +80,6 @@ public class PlayerController : MonoBehaviour
             transCheck = 2;
         }
 
-        camScript.CamTransition(transCheck);
+        screenCheck = camScript.CamTransition(transCheck);
     }
 }
