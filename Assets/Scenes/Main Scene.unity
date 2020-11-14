@@ -1411,7 +1411,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.0010509081}
@@ -1633,7 +1633,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1361209222}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.19, y: -3.52, z: -0.40999964}
+  m_LocalPosition: {x: 3.19, y: -3.48, z: -0.40999964}
   m_LocalScale: {x: 6.4779234, y: 6.5815177, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
