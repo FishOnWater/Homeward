@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Transition1
   - turn
+  - Transition2
   layers:
   - Default
   - TransparentFX
