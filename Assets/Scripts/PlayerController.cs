@@ -20,15 +20,22 @@ public class PlayerController : MonoBehaviour
     //Se quisermos double jumps ou mais
     private int extraJumps;
     public int extraJumpsValue;
-
+    //extended jump variables
+    [SerializeField] bool isJumpHeld;    
+    [SerializeField] float MaxJumpTime = 1f;
+    private float CurrentJumpTime;
     //Acesso ao script da Câmara
     public CameraTransition camScript;
+
+    //variaveis de deteção de parede
+    float SideLenght = 0.05f;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         extraJumps = extraJumpsValue;
+        CurrentJumpTime = 0f;
     }
 
     void FixedUpdate(){
@@ -59,14 +66,51 @@ public class PlayerController : MonoBehaviour
     {
         if(isGrounded == true){
             extraJumps = extraJumpsValue;
+            //isJumpHeld = false;
         }
         if(Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0){
             rb.velocity = Vector2.up * jumpForce;
-            extraJumps--;
+            extraJumps--;            
         }  
         else if(Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true){
             rb.velocity = Vector2.up * jumpForce;
-        } 
+            isJumpHeld = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
+            isJumpHeld = false;
+            CurrentJumpTime = 0f;
+        }
+
+
+        if(isJumpHeld && CurrentJumpTime < MaxJumpTime)
+        {
+            Debug.Log("a correr");
+            CurrentJumpTime += Time.deltaTime;
+            rb.velocity += Vector2.up * (jumpForce/200f);
+        }
+
+        if(CurrentJumpTime > MaxJumpTime)
+        {
+            isJumpHeld = false;
+            CurrentJumpTime = 0f;
+        }
+
+
+
+        if (facingRight)
+        {
+            if (IsOnWallRight())
+            {
+               Debug.Log("detetada parede a direita");
+            }
+        }else{
+            if (IsOnWallLeft())
+            {
+                Debug.Log("detetada parede a esquerda");
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D col){
@@ -81,5 +125,49 @@ public class PlayerController : MonoBehaviour
         }
 
         screenCheck = camScript.CamTransition(transCheck);
+    }
+
+    private bool IsOnWallRight()
+    {
+        bool retval = false;
+        
+        float ColliderThreshold = 0.01f;
+
+        Vector2 linestart = new Vector2(this.transform.position.x + GetComponent<Renderer>().bounds.extents.x + ColliderThreshold, this.transform.position.y);
+        Vector2 SearchVector = new Vector2(linestart.x + SideLenght, this.transform.position.y);
+        Debug.DrawRay(linestart, SearchVector);
+        RaycastHit2D hitleft = Physics2D.Linecast(linestart, SearchVector);
+        retval = hitleft;
+
+        if (retval)
+        {
+            if (hitleft.collider.GetComponent<NoWallJump>())
+            {
+                retval = false;
+            }
+        }
+        return retval;
+    }
+
+    private bool IsOnWallLeft()
+    {
+        bool retval = false;
+        
+        float ColliderThreshold = 0.01f;
+
+        Vector2 linestart = new Vector2(this.transform.position.x - GetComponent<Renderer>().bounds.extents.x - ColliderThreshold, this.transform.position.y);
+        Vector2 SearchVector = new Vector2(linestart.x - SideLenght, this.transform.position.y);
+        Debug.DrawRay(linestart, SearchVector);
+        RaycastHit2D hitleft = Physics2D.Linecast(linestart, SearchVector);
+        retval = hitleft;
+
+        if (retval)
+        {
+            if (hitleft.collider.GetComponent<NoWallJump>())
+            {
+                retval = false;
+            }
+        }
+        return retval;
     }
 }
