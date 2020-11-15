@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isJumpHeld;    
     [SerializeField] float MaxJumpTime = 1f;
     private float CurrentJumpTime;
+
+    //walljump variables
+    [SerializeField] float maxLockoutTime = 0.1f;
+    float timer;
     //Acesso ao script da Câmara
     public CameraTransition camScript;
 
@@ -39,10 +43,12 @@ public class PlayerController : MonoBehaviour
     }
 
     void FixedUpdate(){
+        if(timer <= 0) { 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkReadius, whatIsGround);
 
         moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        }
 
         if(facingRight == false && moveInput > 0){
             Flip();
@@ -51,6 +57,8 @@ public class PlayerController : MonoBehaviour
         {
             Flip();
         }
+
+        if (timer > 0f) timer -= Time.deltaTime;
     }
 
     //Para já não se consegue ver, mas fica aqui já apontado
@@ -66,17 +74,45 @@ public class PlayerController : MonoBehaviour
     {
         if(isGrounded == true){
             extraJumps = extraJumpsValue;
-            //isJumpHeld = false;
-        }
-        if(Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0){
-            rb.velocity = Vector2.up * jumpForce;
-            extraJumps--;            
-        }  
-        else if(Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true){
-            rb.velocity = Vector2.up * jumpForce;
-            isJumpHeld = true;
+            isJumpHeld = false;
         }
 
+        if (timer <= 0)
+        {
+
+            if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0)
+            {
+                rb.velocity = Vector2.up * jumpForce;
+                extraJumps--;
+            }
+            else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true)
+            {
+                rb.velocity = Vector2.up * jumpForce;
+                isJumpHeld = true;
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    if (facingRight)
+                    {
+                        if (IsOnWallRight())
+                        {
+                            timer = maxLockoutTime;
+                            rb.velocity = new Vector2(-speed, 1f * jumpForce);
+                        }
+                    }
+                    else
+                    {
+                        if (IsOnWallLeft())
+                        {
+                            timer = maxLockoutTime;
+                            rb.velocity = new Vector2(speed, 1f * jumpForce);
+                        }
+                    }
+                }
+            }
+        }
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
             isJumpHeld = false;
@@ -135,7 +171,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 linestart = new Vector2(this.transform.position.x + GetComponent<Renderer>().bounds.extents.x + ColliderThreshold, this.transform.position.y);
         Vector2 SearchVector = new Vector2(linestart.x + SideLenght, this.transform.position.y);
-        Debug.DrawRay(linestart, SearchVector);
+        //Debug.DrawRay(linestart, SearchVector);
         RaycastHit2D hitleft = Physics2D.Linecast(linestart, SearchVector);
         retval = hitleft;
 
@@ -157,7 +193,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 linestart = new Vector2(this.transform.position.x - GetComponent<Renderer>().bounds.extents.x - ColliderThreshold, this.transform.position.y);
         Vector2 SearchVector = new Vector2(linestart.x - SideLenght, this.transform.position.y);
-        Debug.DrawRay(linestart, SearchVector);
+        //Debug.DrawRay(linestart, SearchVector);
         RaycastHit2D hitleft = Physics2D.Linecast(linestart, SearchVector);
         retval = hitleft;
 
