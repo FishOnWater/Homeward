@@ -6223,7 +6223,13 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512
-  extraJumpsValue: 2
+  extraJumpsValue: 0
+  isJumpHeld: 0
+  MaxJumpTime: 1
+  maxLockoutTime: 0.3
+  cam: {fileID: 2133251574}
+  crosshairs: {fileID: 985278708}
+  lookDir: {x: 0, y: 0}
 --- !u!61 &5455706484895408220
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6331,7 +6337,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 3
+  m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: ee474e91b912a2d4782eb32e75f52017, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1

@@ -28,8 +28,6 @@ public class PlayerController : MonoBehaviour
     //walljump variables
     [SerializeField] float maxLockoutTime = 0.1f;
     float timer;
-    //Acesso ao script da Câmara
-    public CameraTransition camScript;
 
     //variaveis de deteção de parede
     float SideLenght = 0.05f;
@@ -172,20 +170,6 @@ public class PlayerController : MonoBehaviour
         }
         */
     }
-    
-    void OnTriggerEnter2D(Collider2D col){
-        int transCheck = 0;
-        int screenCheck = 0;
-
-        if(col.CompareTag("Transition1")){
-            transCheck = 1;
-        }
-        if(col.CompareTag("Transition2")){
-            transCheck = 2;
-        }
-
-        screenCheck = camScript.CamTransition(transCheck);
-    }
 
     private bool IsOnWallRight()
     {
@@ -257,3 +241,4 @@ public class PlayerController : MonoBehaviour
 
         return Vector2.zero;
     }
+}
