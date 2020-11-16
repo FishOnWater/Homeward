@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isJumpHeld;    
     [SerializeField] float MaxJumpTime = 1f;
     private float CurrentJumpTime;
-
+    
     //walljump variables
     [SerializeField] float maxLockoutTime = 0.1f;
     float timer;
@@ -41,7 +41,6 @@ public class PlayerController : MonoBehaviour
         public Vector2 lookDir;
         Vector2 mousePos;
         Vector2 resultingdir;
-
 
     // Start is called before the first frame update
     void Start()
@@ -173,7 +172,7 @@ public class PlayerController : MonoBehaviour
         }
         */
     }
-
+    
     void OnTriggerEnter2D(Collider2D col){
         int transCheck = 0;
         int screenCheck = 0;
@@ -258,5 +257,3 @@ public class PlayerController : MonoBehaviour
 
         return Vector2.zero;
     }
-
-}
