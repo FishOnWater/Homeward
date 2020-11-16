@@ -21,9 +21,6 @@ public class PlayerController : MonoBehaviour
     private int extraJumps;
     public int extraJumpsValue;
 
-    //Acesso ao script da Câmara
-    public CameraTransition camScript;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -67,19 +64,5 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true){
             rb.velocity = Vector2.up * jumpForce;
         } 
-    }
-
-    void OnTriggerEnter2D(Collider2D col){
-        int transCheck = 0;
-        int screenCheck = 0;
-
-        if(col.CompareTag("Transition1")){
-            transCheck = 1;
-        }
-        if(col.CompareTag("Transition2")){
-            transCheck = 2;
-        }
-
-        screenCheck = camScript.CamTransition(transCheck);
     }
 }
