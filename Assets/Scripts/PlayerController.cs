@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
         public GameObject crosshairs;
         public Vector2 lookDir;
         Vector2 mousePos;
+        Vector2 resultingdir;
 
 
     // Start is called before the first frame update
@@ -56,10 +57,9 @@ public class PlayerController : MonoBehaviour
 
         moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-        }
-
+        }       
         //colocar aqui
-        if(facingRight == false && moveInput > 0){
+        if (facingRight == false && moveInput > 0){
             Flip();
         }
         else if(facingRight == true && moveInput < 0)
@@ -93,8 +93,12 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            
-            ShootHook(lookDir);
+            resultingdir = ShootHook(lookDir);          
+        }
+
+        if(resultingdir != null)
+        {
+            Debug.DrawRay(rb.position, resultingdir);
         }
 
         if (timer <= 0)
@@ -228,7 +232,7 @@ public class PlayerController : MonoBehaviour
         return retval;
     }
 
-    void ShootHook(Vector2 mDir)
+    public Vector2 ShootHook(Vector2 mDir)
     {
         //Vector3 diff = mPos - gameObject.transform.position;
         //float distance = diff.magnitude;
@@ -247,9 +251,12 @@ public class PlayerController : MonoBehaviour
             Vector2 direction = new Vector2(0, 0);
             direction.x = hit.point.x - gameObject.transform.position.x;
             direction.y = hit.point.y - gameObject.transform.position.y;
+           
 
-            rb.velocity = direction * 0.5f;
+            return direction;
         }
+
+        return Vector2.zero;
     }
 
 }
