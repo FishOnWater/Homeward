@@ -34,6 +34,14 @@ public class PlayerController : MonoBehaviour
     //variaveis de deteção de parede
     float SideLenght = 0.05f;
 
+        //grappling hook
+
+        public Camera cam;
+        public GameObject crosshairs;
+        public Vector2 lookDir;
+        Vector2 mousePos;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +58,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
         }
 
+        //colocar aqui
         if(facingRight == false && moveInput > 0){
             Flip();
         }
@@ -73,8 +82,19 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if(isGrounded == true){
-            extraJumps = extraJumpsValue;
-            isJumpHeld = false;
+            extraJumps = extraJumpsValue;            
+        }
+
+        //é preciso isto para fazer o cálculo da posição real do rato no mundo
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        //cálculo da direção do rato (sim, era mesmo só isto)
+        lookDir = mousePos - rb.position;
+        crosshairs.transform.position = new Vector2(mousePos.x, mousePos.y);
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            
+            ShootHook(lookDir);
         }
 
         if (timer <= 0)
@@ -113,18 +133,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
             isJumpHeld = false;
             CurrentJumpTime = 0f;
         }
 
-
         if(isJumpHeld && CurrentJumpTime < MaxJumpTime)
         {
-            Debug.Log("a correr");
+            Debug.Log("a correr");           
             CurrentJumpTime += Time.deltaTime;
-            rb.velocity += Vector2.up * (jumpForce/200f);
+            rb.velocity += Vector2.up * (jumpForce/200f); 
         }
 
         if(CurrentJumpTime > MaxJumpTime)
@@ -134,7 +154,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
+        /*debug code
         if (facingRight)
         {
             if (IsOnWallRight())
@@ -147,6 +167,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("detetada parede a esquerda");
             }
         }
+        */
     }
 
     void OnTriggerEnter2D(Collider2D col){
@@ -206,4 +227,29 @@ public class PlayerController : MonoBehaviour
         }
         return retval;
     }
+
+    void ShootHook(Vector2 mDir)
+    {
+        //Vector3 diff = mPos - gameObject.transform.position;
+        //float distance = diff.magnitude;
+        //Vector2 mDir = diff / distance;
+        //mDir.Normalize();  
+
+        //this part is fucked
+        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, mDir, 5000f, 1 << LayerMask.NameToLayer("Action"));
+        //this one is working great
+        //if(hit.collider != null)
+        if (hit)
+        {
+            Debug.Log("Hit somthing: " + hit.collider.name);
+            hit.transform.GetComponent<SpriteRenderer>().color = Color.red;
+
+            Vector2 direction = new Vector2(0, 0);
+            direction.x = hit.point.x - gameObject.transform.position.x;
+            direction.y = hit.point.y - gameObject.transform.position.y;
+
+            rb.velocity = direction * 0.5f;
+        }
+    }
+
 }

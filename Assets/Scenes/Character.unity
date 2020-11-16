@@ -489,15 +489,18 @@ MonoBehaviour:
   speed: 10
   jumpForce: 8
   groundCheck: {fileID: 2110333808}
-  checkReadius: 0.1
+  checkReadius: 0.01
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512
   extraJumpsValue: 0
   isJumpHeld: 0
-  MaxJumpTime: 0.5
+  MaxJumpTime: 1
   maxLockoutTime: 0.3
   camScript: {fileID: 0}
+  cam: {fileID: 1067744817}
+  crosshairs: {fileID: 1720711740}
+  lookDir: {x: 0, y: 0}
 --- !u!1 &933534435
 GameObject:
   m_ObjectHideFlags: 0
