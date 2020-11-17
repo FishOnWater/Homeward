@@ -682,8 +682,8 @@ GameObject:
   - component: {fileID: 831593646}
   - component: {fileID: 831593649}
   - component: {fileID: 831593648}
-  - component: {fileID: 831593647}
   - component: {fileID: 831593650}
+  - component: {fileID: 831593647}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -717,7 +717,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2483bf2d41abe83468aed86dd58afa47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropTimer: 2
 --- !u!61 &831593648
 BoxCollider2D:
   m_ObjectHideFlags: 0
