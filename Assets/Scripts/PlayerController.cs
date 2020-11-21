@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
         public GameObject crosshairs;
         public Vector2 lookDir;
         Vector2 mousePos;
-        Vector2 resultingdir;
+        //Vector2 resultingdir;
+        Vector2 targetPos;
 
     // Start is called before the first frame update
     void Start()
@@ -90,14 +91,21 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            resultingdir = ShootHook(lookDir);
-            Debug.Log("Direção do ganhco: " + resultingdir);
-            rb.AddForce(resultingdir, ForceMode2D.Impulse);         
+            //resultingdir = ShootHook(lookDir);
+            targetPos = ShootHook(lookDir);
+            Debug.Log("Direção do ganhco: " + targetPos);
+            //rb.AddForce(resultingdir, ForceMode2D.Impulse);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, 5.0f*Time.deltaTime);                 
         }
 
-        if(resultingdir != null)
+        /*if(resultingdir != null)
         {
             Debug.DrawRay(rb.position, resultingdir);
+        }*/
+
+        if(targetPos != null)
+        {
+            Debug.DrawRay(rb.position, targetPos);
         }
 
         if (timer <= 0)
@@ -233,12 +241,13 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Hit somthing: " + hit.collider.name);
             hit.transform.GetComponent<SpriteRenderer>().color = Color.red;
 
-            Vector2 direction = new Vector2(0, 0);
-            direction.x = hit.point.x - gameObject.transform.position.x;
-            direction.y = hit.point.y - gameObject.transform.position.y;
+            //Vector2 direction = new Vector2(0, 0);
+            //direction.x = hit.point.x - gameObject.transform.position.x;
+            //direction.y = hit.point.y - gameObject.transform.position.y;
            
+           Vector2 hitPos = new Vector2(hit.point.x, hit.point.y);
 
-            return direction;
+            return hitPos;
         }
 
         return Vector2.zero;
