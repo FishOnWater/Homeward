@@ -90,7 +90,9 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            resultingdir = ShootHook(lookDir);          
+            resultingdir = ShootHook(lookDir);
+            Debug.Log("Direção do ganhco: " + resultingdir);
+            rb.AddForce(resultingdir, ForceMode2D.Impulse);         
         }
 
         if(resultingdir != null)

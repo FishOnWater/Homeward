@@ -497,7 +497,6 @@ MonoBehaviour:
   isJumpHeld: 0
   MaxJumpTime: 1
   maxLockoutTime: 0.3
-  camScript: {fileID: 0}
   cam: {fileID: 1067744817}
   crosshairs: {fileID: 1720711740}
   lookDir: {x: 0, y: 0}
