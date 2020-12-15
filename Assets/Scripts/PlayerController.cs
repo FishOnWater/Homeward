@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
         public Vector2 lookDir;
         Vector2 mousePos;
         Vector2 resultingdir;
+        [SerializeField]float GTimeMax = 0.5f;
+        [SerializeField]float GTime;
+        bool grappling;
 
     // Start is called before the first frame update
     void Start()
@@ -46,14 +49,30 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         extraJumps = extraJumpsValue;
         CurrentJumpTime = 0f;
+        grappling = false;
     }
 
     void FixedUpdate(){
         if(timer <= 0) { 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkReadius, whatIsGround);
-
-        moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        if (!grappling)
+            {
+                if (isGrounded)
+                {
+                    moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
+                    rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+                }
+                else
+                {
+                    moveInput = Input.GetAxis("Horizontal");
+                    rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+                }
+            }
+            else
+            {
+                GTime -= Time.deltaTime;
+                if (GTime < 0) grappling = false;
+            }
         }       
         //colocar aqui
         if (facingRight == false && moveInput > 0){
@@ -92,7 +111,10 @@ public class PlayerController : MonoBehaviour
         {
             resultingdir = ShootHook(lookDir);
             Debug.Log("Direção do ganhco: " + resultingdir);
-            rb.AddForce(resultingdir, ForceMode2D.Impulse);         
+            rb.velocity = Vector2.zero;
+            rb.AddForce(resultingdir * speed/5, ForceMode2D.Impulse);
+            grappling = true;
+            GTime = GTimeMax;
         }
 
         if(resultingdir != null)
