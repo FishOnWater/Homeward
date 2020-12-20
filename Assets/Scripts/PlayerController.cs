@@ -33,15 +33,16 @@ public class PlayerController : MonoBehaviour
     float SideLenght = 0.05f;
 
         //grappling hook
-
         public Camera cam;
         public GameObject crosshairs;
         public Vector2 lookDir;
         Vector2 mousePos;
         Vector2 resultingdir;
-       [SerializeField]float GTimeMax = 0.5f;
-       [SerializeField]float GTime;
+        [SerializeField]float GTimeMax = 0.5f;
+        [SerializeField]float GTime;
         bool grappling;
+        public int Gmax = 3;
+        public int hooks;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
         extraJumps = extraJumpsValue;
         CurrentJumpTime = 0f;
         grappling = false;
+        hooks = Gmax;
     }
 
     void FixedUpdate(){
@@ -109,12 +111,16 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            resultingdir = ShootHook(lookDir);
-            Debug.Log("Direção do ganhco: " + resultingdir);
-            rb.velocity = Vector2.zero;
-            rb.AddForce(resultingdir * speed/5, ForceMode2D.Impulse);
-            grappling = true;
-            GTime = GTimeMax;
+            if (hooks > 0)
+            {
+                hooks--;
+                resultingdir = ShootHook(lookDir);
+                Debug.Log("Direção do ganhco: " + resultingdir);
+                rb.velocity = Vector2.zero;
+                rb.AddForce(resultingdir * speed / 5, ForceMode2D.Impulse);
+                grappling = true;
+                GTime = GTimeMax;
+            }
         }
 
         if(resultingdir != null)
