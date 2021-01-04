@@ -21,6 +21,6 @@ public class FallingPlatform : MonoBehaviour
     }
     void DropPlatform()
     {
-        rb.isKinematic = false;
+        rb.AddForce(Vector2.down, (ForceMode2D.Impulse));
     }
 }
