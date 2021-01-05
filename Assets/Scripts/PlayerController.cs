@@ -121,12 +121,6 @@ public class PlayerController : MonoBehaviour
                 grappling = true;
                 GTime = GTimeMax;
             }
-            resultingdir = ShootHook(lookDir);
-            Debug.Log("Direção do ganhco: " + resultingdir);
-            rb.velocity = Vector2.zero;
-            rb.AddForce(resultingdir * speed/5, ForceMode2D.Impulse);
-            grappling = true;
-            GTime = GTimeMax;
         }
 
         if(resultingdir != null)
