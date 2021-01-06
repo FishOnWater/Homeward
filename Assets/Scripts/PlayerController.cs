@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxLockoutTime = 0.1f;
     float timer;
 
+    public GameObject checkpoint;
+    int deaths;
+
     //variaveis de deteção de parede
     float SideLenght = 0.05f;
 
@@ -115,9 +118,10 @@ public class PlayerController : MonoBehaviour
             {
                 hooks--;
                 resultingdir = ShootHook(lookDir);
+                resultingdir.Normalize();
                 Debug.Log("Direção do ganhco: " + resultingdir);
                 rb.velocity = Vector2.zero;
-                rb.AddForce(resultingdir * speed / 5, ForceMode2D.Impulse);
+                rb.AddForce(resultingdir * speed * 2, ForceMode2D.Impulse);
                 grappling = true;
                 GTime = GTimeMax;
             }
@@ -270,5 +274,10 @@ public class PlayerController : MonoBehaviour
         }
 
         return Vector2.zero;
+    }
+
+    public void Death(){
+        transform.position = checkpoint.transform.position;
+        GameObject.FindGameObjectWithTag("HUD").GetComponent<scr_UI>().DeathCount++;
     }
 }
