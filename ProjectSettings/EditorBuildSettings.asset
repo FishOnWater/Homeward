@@ -24,6 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Forest Level.unity
     guid: 8b75be860f2fee149b1098f0e021afc0
   - enabled: 1
-    path: Assets/Scenes/Cliffs Level.unity
+    path: Assets/Scenes/Cliffs Level Cam15.unity
     guid: c706609b50ea2f940b7208e3ff130c8a
   m_configObjects: {}
