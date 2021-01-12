@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
     public float jumpForce;
+    public Animator animator;
     
     private float moveInput;
     private Rigidbody2D rb;
@@ -64,7 +65,9 @@ public class PlayerController : MonoBehaviour
             {
                 if (isGrounded)
                 {
+              
                     moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
+                    animator.SetFloat("horizontal", Mathf.Abs(moveInput));
                     rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
                 }
                 else
@@ -102,8 +105,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isGrounded == true){
-            extraJumps = extraJumpsValue;            
+        animator.SetBool("isjumping", isJumpHeld);
+        animator.SetBool("Grounded", isGrounded);
+        if (isGrounded == true){
+            extraJumps = extraJumpsValue;           
         }
 
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
