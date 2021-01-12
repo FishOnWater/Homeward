@@ -92,6 +92,8 @@ public class PlayerController : MonoBehaviour
         }
 
         if (timer > 0f) timer -= Time.deltaTime;
+        animator.SetFloat("special time", timer);
+        animator.SetBool("isGrap", grappling);
     }
 
     //Para já não se consegue ver, mas fica aqui já apontado
