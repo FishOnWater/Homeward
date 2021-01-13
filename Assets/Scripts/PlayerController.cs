@@ -110,7 +110,8 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isjumping", isJumpHeld);
         animator.SetBool("Grounded", isGrounded);
         if (isGrounded == true){
-            extraJumps = extraJumpsValue;           
+            extraJumps = extraJumpsValue;
+            
         }
 
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
