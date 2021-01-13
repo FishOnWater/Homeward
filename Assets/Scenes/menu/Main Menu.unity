@@ -1007,7 +1007,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 315930775}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1311076136}
+        m_TargetAssemblyTypeName: btn_start, Assembly-CSharp
+        m_MethodName: Change_Scene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Level select
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1774627566
 MonoBehaviour:
   m_ObjectHideFlags: 0

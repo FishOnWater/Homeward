@@ -21,6 +21,7 @@ public class FallingSpike : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other){
         if(other.gameObject.CompareTag("Player")){
             Debug.Log("Player hit");
+            other.gameObject.GetComponent<PlayerController>().Death();
             Destroy(gameObject);
         }
 

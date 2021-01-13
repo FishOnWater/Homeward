@@ -10,6 +10,7 @@ TagManager:
   - turn
   - Transition2
   - Ropes
+  - HUD
   layers:
   - Default
   - TransparentFX

@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
     public float jumpForce;
+    public Animator animator;
     
     private float moveInput;
     private Rigidbody2D rb;
@@ -28,6 +29,9 @@ public class PlayerController : MonoBehaviour
     //walljump variables
     [SerializeField] float maxLockoutTime = 0.1f;
     float timer;
+
+    public GameObject checkpoint;
+    int deaths;
 
     //variaveis de deteção de parede
     float SideLenght = 0.05f;
@@ -61,7 +65,9 @@ public class PlayerController : MonoBehaviour
             {
                 if (isGrounded)
                 {
+              
                     moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
+                    animator.SetFloat("horizontal", Mathf.Abs(moveInput));
                     rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
                 }
                 else
@@ -86,6 +92,8 @@ public class PlayerController : MonoBehaviour
         }
 
         if (timer > 0f) timer -= Time.deltaTime;
+        animator.SetFloat("special time", timer);
+        animator.SetBool("isGrap", grappling);
     }
 
     //Para já não se consegue ver, mas fica aqui já apontado
@@ -99,8 +107,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isGrounded == true){
-            extraJumps = extraJumpsValue;            
+        animator.SetBool("isjumping", isJumpHeld);
+        animator.SetBool("Grounded", isGrounded);
+        if (isGrounded == true){
+            extraJumps = extraJumpsValue;
+            
         }
 
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
@@ -115,9 +126,10 @@ public class PlayerController : MonoBehaviour
             {
                 hooks--;
                 resultingdir = ShootHook(lookDir);
+                resultingdir.Normalize();
                 Debug.Log("Direção do ganhco: " + resultingdir);
                 rb.velocity = Vector2.zero;
-                rb.AddForce(resultingdir * speed / 5, ForceMode2D.Impulse);
+                rb.AddForce(resultingdir * speed * 2, ForceMode2D.Impulse);
                 grappling = true;
                 GTime = GTimeMax;
             }
@@ -270,5 +282,10 @@ public class PlayerController : MonoBehaviour
         }
 
         return Vector2.zero;
+    }
+
+    public void Death(){
+        transform.position = checkpoint.transform.position;
+        GameObject.FindGameObjectWithTag("HUD").GetComponent<scr_UI>().DeathCount++;
     }
 }
