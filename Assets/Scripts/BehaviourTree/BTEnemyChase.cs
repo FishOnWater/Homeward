@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lunge : MonoBehaviour
+public class BTEnemyChase : MonoBehaviour
 {
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +15,4 @@ public class Lunge : MonoBehaviour
     {
         
     }
-
-    
 }

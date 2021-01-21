@@ -21,19 +21,15 @@ public class BehaviourTree : MonoBehaviour
 
         Blackboard = new Dictionary<string, object>();
         Blackboard.Add("enemy1", new Rect(25, 85, 10, 10));
-        Blackboard.Add("enemy2", new Rect(45, 65, 10, 10));
-
+        
         //initial behaviour is stopped
         startedBehaviour = false;
         mRoot = new Repeater(this, new Sequencer(this, new BehaviourTreeNode[] { new BTEnemyMove(this, 25, 85) }));
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
         if (!startedBehaviour)
         {
             behaviour = StartCoroutine(RunBehaviour());
@@ -49,6 +45,7 @@ public class BehaviourTree : MonoBehaviour
             yield return null;
             result = Root.Execute();
         }
+
         //Debug.Log("Behaviour has finished with: " + result);
     }
 }
