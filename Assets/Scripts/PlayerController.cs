@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
                         if (IsOnWallRight())
                         {
                             timer = maxLockoutTime;
-                            rb.velocity = new Vector2(-speed, 1f * jumpForce);
+                            rb.velocity = new Vector2(-speed, 1.5f * jumpForce);
                         }
                     }
                     else
@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
                         if (IsOnWallLeft())
                         {
                             timer = maxLockoutTime;
-                            rb.velocity = new Vector2(speed, 1f * jumpForce);
+                            rb.velocity = new Vector2(speed, 1.5f * jumpForce);
                         }
                     }
                 }
