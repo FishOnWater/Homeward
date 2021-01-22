@@ -22,12 +22,8 @@ public class FallingSpike : MonoBehaviour
         if(other.gameObject.CompareTag("Player")){
             Debug.Log("Player hit");
             other.gameObject.GetComponent<PlayerController>().Death();
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
-
-        if(other.gameObject.CompareTag("Ground")){
-            Debug.Log("Ground hit");
-            Destroy(gameObject);
-        }
+        Destroy(this.gameObject);
     }
 }

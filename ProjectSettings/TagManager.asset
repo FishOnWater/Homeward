@@ -11,6 +11,7 @@ TagManager:
   - Transition2
   - Ropes
   - HUD
+  - Cycle
   layers:
   - Default
   - TransparentFX
