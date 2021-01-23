@@ -48,6 +48,11 @@ public class PlayerController : MonoBehaviour
         public int Gmax = 3;
         public int hooks;
 
+
+    // cogwheel
+
+    public int cogwheels;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -151,6 +156,7 @@ public class PlayerController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true)
             {
                 rb.velocity = Vector2.up * jumpForce;
+                SoundManagerScript.PlaySound("jump");
                 isJumpHeld = true;
             }
             else
@@ -163,6 +169,7 @@ public class PlayerController : MonoBehaviour
                         {
                             timer = maxLockoutTime;
                             rb.velocity = new Vector2(-speed, 1.5f * jumpForce);
+                            SoundManagerScript.PlaySound("walljump");
                         }
                     }
                     else
@@ -171,6 +178,8 @@ public class PlayerController : MonoBehaviour
                         {
                             timer = maxLockoutTime;
                             rb.velocity = new Vector2(speed, 1.5f * jumpForce);
+                            SoundManagerScript.PlaySound("walljump");
+
                         }
                     }
                 }
