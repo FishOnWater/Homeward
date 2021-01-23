@@ -31,4 +31,14 @@ public class plat_down_up : MonoBehaviour
     private void OnDrawGizmos(){
         Gizmos.DrawLine(pos1.position, pos2.position);
     }
+
+    void OnCollisionEnter2D(Collision2D other){
+        if(other.gameObject.CompareTag("Player")){
+            other.collider.transform.SetParent(transform);
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D other){
+        other.collider.transform.SetParent(null);
+    }
 }
