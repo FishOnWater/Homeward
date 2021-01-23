@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnObj: {fileID: 9133025399498576681}
   prefab: {fileID: 2512130332878285875, guid: 58d881b5823782c49bf9329bf83bb2dc, type: 3}
+  maxTimer: 3
 --- !u!1001 &6657418713396559642
 PrefabInstance:
   m_ObjectHideFlags: 0

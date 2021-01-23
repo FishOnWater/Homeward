@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectRespawn : MonoBehaviour
+public class RopeRespawn : MonoBehaviour
 {
     public GameObject respawnObj, prefab;
     string tagObj;
@@ -24,7 +24,7 @@ public class ObjectRespawn : MonoBehaviour
             if(timer <= 0){
             Instantiate(prefab, this.gameObject.transform);
             respawnObj = GameObject.FindGameObjectWithTag("Cycle");
-            respawnObj.gameObject.tag = "Untagged";
+            respawnObj.gameObject.tag = "Ropes";
 
             timer = maxTimer;
             }

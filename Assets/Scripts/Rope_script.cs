@@ -15,7 +15,7 @@ public class Rope_script : MonoBehaviour
             hold = col.gameObject.GetComponent<PlayerController>();
             hold.hooks = hold.Gmax;
             
-            Destroy(gameObject);
+           
             
 
         }
