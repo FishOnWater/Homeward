@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
         public int Gmax = 3;
         public int hooks;
 
-        public float boostdivider;
 
     // cogwheel
 
@@ -135,7 +134,7 @@ public class PlayerController : MonoBehaviour
                 resultingdir.Normalize();
                 Debug.Log("Direção do ganhco: " + resultingdir);
                 rb.velocity = Vector2.zero;
-                rb.AddForce(resultingdir * speed * 4, ForceMode2D.Impulse);
+                rb.AddForce(resultingdir * speed * 2, ForceMode2D.Impulse);
                 grappling = true;
                 GTime = GTimeMax;
             }
@@ -197,7 +196,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("a correr");           
             CurrentJumpTime += Time.deltaTime;
-            rb.velocity += Vector2.up * (jumpForce/boostdivider); 
+            rb.velocity += Vector2.up * (jumpForce/200f); 
         }
 
         if(CurrentJumpTime > MaxJumpTime)

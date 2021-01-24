@@ -139,7 +139,6 @@ MonoBehaviour:
   GTime: 0
   Gmax: 3
   hooks: 0
-  boostdivider: 14
   cogwheels: 0
 --- !u!50 &6095299479774488846
 Rigidbody2D:
