@@ -7,11 +7,11 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float jumpForce;
     public Animator animator;
-    
+
     private float moveInput;
     private Rigidbody2D rb;
     private bool facingRight = true;
-    
+
     //Cria um circulo que irá verificar se está a tocar no chão
     private bool isGrounded;
     public Transform groundCheck;
@@ -22,10 +22,10 @@ public class PlayerController : MonoBehaviour
     private int extraJumps;
     public int extraJumpsValue;
     //extended jump variables
-    [SerializeField] bool isJumpHeld;    
+    [SerializeField] bool isJumpHeld;
     [SerializeField] float MaxJumpTime = 1f;
     private float CurrentJumpTime;
-    
+
     //walljump variables
     [SerializeField] float maxLockoutTime = 0.1f;
     float timer;
@@ -36,17 +36,22 @@ public class PlayerController : MonoBehaviour
     //variaveis de deteção de parede
     float SideLenght = 0.05f;
 
-        //grappling hook
-        public Camera cam;
-        public GameObject crosshairs;
-        public Vector2 lookDir;
-        Vector2 mousePos;
-        Vector2 resultingdir;
-        [SerializeField]float GTimeMax = 0.5f;
-        [SerializeField]float GTime;
-        bool grappling;
-        public int Gmax = 3;
-        public int hooks;
+    //grappling hook
+    public Camera cam;
+    public GameObject crosshairs;
+    public Vector2 lookDir;
+    Vector2 mousePos;
+    Vector2 resultingdir;
+    [SerializeField] float GTimeMax;
+    [SerializeField] float GTime;
+    bool grappling;
+    public int Gmax = 3;
+    public int hooks;
+    public int boostdivider;
+    public int GPMultiplier;
+    // cogwheel
+
+    public int cogwheels;
 
     // Start is called before the first frame update
     void Start()
@@ -58,14 +63,16 @@ public class PlayerController : MonoBehaviour
         hooks = Gmax;
     }
 
-    void FixedUpdate(){
-        if(timer <= 0) { 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkReadius, whatIsGround);
-        if (!grappling)
+    void FixedUpdate()
+    {
+        if (timer <= 0)
+        {
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkReadius, whatIsGround);
+            if (!grappling)
             {
                 if (isGrounded)
                 {
-              
+
                     moveInput = Input.GetAxis("Horizontal"); //GetAxisRaw for more snappy move
                     animator.SetFloat("horizontal", Mathf.Abs(moveInput));
                     rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
@@ -79,14 +86,15 @@ public class PlayerController : MonoBehaviour
             else
             {
                 GTime -= Time.deltaTime;
-                if (GTime < 0) grappling = false;
+                if (GTime <= 0) grappling = false;
             }
-        }       
+        }
         //colocar aqui
-        if (facingRight == false && moveInput > 0){
+        if (facingRight == false && moveInput > 0)
+        {
             Flip();
         }
-        else if(facingRight == true && moveInput < 0)
+        else if (facingRight == true && moveInput < 0)
         {
             Flip();
         }
@@ -97,7 +105,8 @@ public class PlayerController : MonoBehaviour
     }
 
     //Para já não se consegue ver, mas fica aqui já apontado
-    void Flip(){
+    void Flip()
+    {
         facingRight = !facingRight;
         Vector3 Scaler = transform.localScale;
         Scaler.x *= -1;
@@ -109,9 +118,10 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("isjumping", isJumpHeld);
         animator.SetBool("Grounded", isGrounded);
-        if (isGrounded == true){
+        if (isGrounded == true)
+        {
             extraJumps = extraJumpsValue;
-            
+
         }
 
         //é preciso isto para fazer o cálculo da posição real do rato no mundo
@@ -127,15 +137,15 @@ public class PlayerController : MonoBehaviour
                 hooks--;
                 resultingdir = ShootHook(lookDir);
                 resultingdir.Normalize();
-                Debug.Log("Direção do ganhco: " + resultingdir);
+                Debug.Log("Direção do gancho: " + resultingdir);
                 rb.velocity = Vector2.zero;
-                rb.AddForce(resultingdir * speed * 2, ForceMode2D.Impulse);
+                rb.AddForce(resultingdir * speed * GPMultiplier, ForceMode2D.Impulse);
                 grappling = true;
                 GTime = GTimeMax;
             }
         }
 
-        if(resultingdir != null)
+        if (resultingdir != null)
         {
             Debug.DrawRay(rb.position, resultingdir);
         }
@@ -143,19 +153,20 @@ public class PlayerController : MonoBehaviour
         if (timer <= 0)
         {
 
-            if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps > 0)
+            if (Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
             {
                 rb.velocity = Vector2.up * jumpForce;
                 extraJumps--;
             }
-            else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJumps == 0 && isGrounded == true)
+            else if (Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isGrounded == true)
             {
                 rb.velocity = Vector2.up * jumpForce;
+                SoundManagerScript.PlaySound("jump");
                 isJumpHeld = true;
             }
             else
             {
-                if (Input.GetKeyDown(KeyCode.UpArrow))
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
                     if (facingRight)
                     {
@@ -163,6 +174,7 @@ public class PlayerController : MonoBehaviour
                         {
                             timer = maxLockoutTime;
                             rb.velocity = new Vector2(-speed, 1.5f * jumpForce);
+                            SoundManagerScript.PlaySound("walljump");
                         }
                     }
                     else
@@ -171,26 +183,28 @@ public class PlayerController : MonoBehaviour
                         {
                             timer = maxLockoutTime;
                             rb.velocity = new Vector2(speed, 1.5f * jumpForce);
+                            SoundManagerScript.PlaySound("walljump");
+
                         }
                     }
                 }
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.UpArrow))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
             isJumpHeld = false;
             CurrentJumpTime = 0f;
         }
 
-        if(isJumpHeld && CurrentJumpTime < MaxJumpTime)
+        if (isJumpHeld && CurrentJumpTime < MaxJumpTime)
         {
-            Debug.Log("a correr");           
+            Debug.Log("a correr");
             CurrentJumpTime += Time.deltaTime;
-            rb.velocity += Vector2.up * (jumpForce/200f); 
+            rb.velocity += Vector2.up * (jumpForce / boostdivider);
         }
 
-        if(CurrentJumpTime > MaxJumpTime)
+        if (CurrentJumpTime > MaxJumpTime)
         {
             isJumpHeld = false;
             CurrentJumpTime = 0f;
@@ -216,7 +230,7 @@ public class PlayerController : MonoBehaviour
     private bool IsOnWallRight()
     {
         bool retval = false;
-        
+
         float ColliderThreshold = 0.01f;
 
         Vector2 linestart = new Vector2(this.transform.position.x + GetComponent<Renderer>().bounds.extents.x + ColliderThreshold, this.transform.position.y);
@@ -238,7 +252,7 @@ public class PlayerController : MonoBehaviour
     private bool IsOnWallLeft()
     {
         bool retval = false;
-        
+
         float ColliderThreshold = 0.01f;
 
         Vector2 linestart = new Vector2(this.transform.position.x - GetComponent<Renderer>().bounds.extents.x - ColliderThreshold, this.transform.position.y);
@@ -276,7 +290,7 @@ public class PlayerController : MonoBehaviour
             Vector2 direction = new Vector2(0, 0);
             direction.x = hit.point.x - gameObject.transform.position.x;
             direction.y = hit.point.y - gameObject.transform.position.y;
-           
+
 
             return direction;
         }
@@ -284,8 +298,10 @@ public class PlayerController : MonoBehaviour
         return Vector2.zero;
     }
 
-    public void Death(){
+    public void Death()
+    {
         transform.position = checkpoint.transform.position;
         GameObject.FindGameObjectWithTag("HUD").GetComponent<scr_UI>().DeathCount++;
+        cogwheels = 0;
     }
 }

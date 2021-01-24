@@ -18,6 +18,8 @@ public class EnemyAI : MonoBehaviour
     private State state;
     [SerializeField]
     public float speed;
+    [SerializeField]
+    public float targetRange;
 
 
     public GameObject player;
@@ -100,7 +102,7 @@ public class EnemyAI : MonoBehaviour
     }
     private void FindTarget()
     {
-        float targetRange = 10f;
+        
         if (Vector3.Distance(transform.position, playerPos) < targetRange)
         {
             state = State.ChaseTarget;
@@ -118,6 +120,13 @@ public class EnemyAI : MonoBehaviour
         else
             transform.eulerAngles = new Vector3(0, 0, 0);
     }
-
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            SoundManagerScript.PlaySound("death");
+            other.gameObject.GetComponent<PlayerController>().Death();
+        }
+    }
 
 }
