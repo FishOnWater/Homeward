@@ -302,5 +302,6 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = checkpoint.transform.position;
         GameObject.FindGameObjectWithTag("HUD").GetComponent<scr_UI>().DeathCount++;
+        cogwheels = 0;
     }
 }
