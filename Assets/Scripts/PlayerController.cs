@@ -61,7 +61,8 @@ public class PlayerController : MonoBehaviour
         CurrentJumpTime = 0f;
         grappling = false;
         hooks = Gmax;
-    }
+        Cursor.visible = false;
+     }
 
     void FixedUpdate()
     {
@@ -284,8 +285,7 @@ public class PlayerController : MonoBehaviour
         //if(hit.collider != null)
         if (hit)
         {
-            Debug.Log("Hit somthing: " + hit.collider.name);
-            hit.transform.GetComponent<SpriteRenderer>().color = Color.red;
+           
 
             Vector2 direction = new Vector2(0, 0);
             direction.x = hit.point.x - gameObject.transform.position.x;
