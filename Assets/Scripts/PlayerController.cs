@@ -21,10 +21,6 @@ public class PlayerController : MonoBehaviour
     //Se quisermos double jumps ou mais
     private int extraJumps;
     public int extraJumpsValue;
-    //extended jump variables
-    [SerializeField] bool isJumpHeld;
-    [SerializeField] float MaxJumpTime = 1f;
-    private float CurrentJumpTime;
 
     //walljump variables
     [SerializeField] float maxLockoutTime = 0.1f;
@@ -58,9 +54,10 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         extraJumps = extraJumpsValue;
-        CurrentJumpTime = 0f;
+        //CurrentJumpTime = 0f;
         grappling = false;
         hooks = Gmax;
+        Cursor.visible = false;
     }
 
     void FixedUpdate()
@@ -116,7 +113,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animator.SetBool("isjumping", isJumpHeld);
+        //animator.SetBool("isjumping", isJumpHeld);
         animator.SetBool("Grounded", isGrounded);
         if (isGrounded == true)
         {
@@ -145,11 +142,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (resultingdir != null)
-        {
-            Debug.DrawRay(rb.position, resultingdir);
-        }
-
         if (timer <= 0)
         {
 
@@ -162,7 +154,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.velocity = Vector2.up * jumpForce;
                 SoundManagerScript.PlaySound("jump");
-                isJumpHeld = true;
+                //isJumpHeld = true;
             }
             else
             {
@@ -190,26 +182,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isJumpHeld = false;
-            CurrentJumpTime = 0f;
-        }
-
-        if (isJumpHeld && CurrentJumpTime < MaxJumpTime)
-        {
-            Debug.Log("a correr");
-            CurrentJumpTime += Time.deltaTime;
-            rb.velocity += Vector2.up * (jumpForce / boostdivider);
-        }
-
-        if (CurrentJumpTime > MaxJumpTime)
-        {
-            isJumpHeld = false;
-            CurrentJumpTime = 0f;
-        }
-
 
         /*debug code
         if (facingRight)
