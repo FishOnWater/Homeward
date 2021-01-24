@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private bool facingRight = true;
     
     //Cria um circulo que irá verificar se está a tocar no chão
-    private bool isGrounded;
+    [SerializeField]private bool isGrounded;
     public Transform groundCheck;
     public float checkReadius;
     public LayerMask whatIsGround;
@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isJumpHeld;    
     [SerializeField] float MaxJumpTime = 1f;
     private float CurrentJumpTime;
+    public int boostdivider;
     
     //walljump variables
     [SerializeField] float maxLockoutTime = 0.1f;
@@ -64,8 +65,9 @@ public class PlayerController : MonoBehaviour
     }
 
     void FixedUpdate(){
-        if(timer <= 0) { 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkReadius, whatIsGround);
+        if(timer <= 0) {
+        if(!isJumpHeld || CurrentJumpTime > 0.2f)   isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkReadius, whatIsGround);
+       
         if (!grappling)
             {
                 if (isGrounded)
@@ -134,7 +136,7 @@ public class PlayerController : MonoBehaviour
                 resultingdir.Normalize();
                 Debug.Log("Direção do ganhco: " + resultingdir);
                 rb.velocity = Vector2.zero;
-                rb.AddForce(resultingdir * speed * 2, ForceMode2D.Impulse);
+                rb.AddForce(resultingdir * speed * 4, ForceMode2D.Impulse);
                 grappling = true;
                 GTime = GTimeMax;
             }
@@ -186,7 +188,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.UpArrow))
+        if (Input.GetKeyUp(KeyCode.UpArrow)||CurrentJumpTime > MaxJumpTime)
         {
             isJumpHeld = false;
             CurrentJumpTime = 0f;
@@ -196,14 +198,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("a correr");           
             CurrentJumpTime += Time.deltaTime;
-            rb.velocity += Vector2.up * (jumpForce/200f); 
+            rb.velocity += Vector2.up * (jumpForce/ boostdivider); 
         }
 
-        if(CurrentJumpTime > MaxJumpTime)
-        {
-            isJumpHeld = false;
-            CurrentJumpTime = 0f;
-        }
 
 
         /*debug code
