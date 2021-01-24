@@ -105,6 +105,7 @@ public class EnemyAI : MonoBehaviour
         
         if (Vector3.Distance(transform.position, playerPos) < targetRange)
         {
+            
             state = State.ChaseTarget;
         }
         else
@@ -116,15 +117,15 @@ public class EnemyAI : MonoBehaviour
     private void NpcDirection(Vector3 currentPos, Vector3 destinationPos)
     {
         if ((destinationPos.x - currentPos.x) > 0)
-            transform.eulerAngles = new Vector3(0, -180, 0);
-        else
             transform.eulerAngles = new Vector3(0, 0, 0);
+        else
+            transform.eulerAngles = new Vector3(0, -180, 0);
     }
     void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SoundManagerScript.PlaySound("death");
+            SoundManagerScript.PlaySound("ghost");
             other.gameObject.GetComponent<PlayerController>().Death();
         }
     }

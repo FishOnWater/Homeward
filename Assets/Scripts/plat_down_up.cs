@@ -40,11 +40,22 @@ public class plat_down_up : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.collider.transform.SetParent(transform);
+        }
+
         if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<PlayerController>().cogwheels > 0)
         {
             isActive = true;
             other.gameObject.GetComponent<PlayerController>().cogwheels--;
             SoundManagerScript.PlaySound("fixElevator");
         }
+    }
+    
+
+    void OnCollisionExit2D(Collision2D other)
+    {
+        other.collider.transform.SetParent(null);
     }
 }

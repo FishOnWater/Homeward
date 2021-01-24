@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     // cogwheel
 
     public int cogwheels;
-
+    public int checkCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         extraJumps = extraJumpsValue;
         //CurrentJumpTime = 0f;
         grappling = false;
-        hooks = Gmax;
+        hooks = 0;
         Cursor.visible = false;
     }
 
@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour
         {
             if (hooks > 0)
             {
+                SoundManagerScript.PlaySound("hook");
                 hooks--;
                 resultingdir = ShootHook(lookDir);
                 resultingdir.Normalize();
@@ -165,7 +166,7 @@ public class PlayerController : MonoBehaviour
                         if (IsOnWallRight())
                         {
                             timer = maxLockoutTime;
-                            rb.velocity = new Vector2(-speed, 1.5f * jumpForce);
+                            rb.velocity = new Vector2(-speed, 1.2f * jumpForce);
                             SoundManagerScript.PlaySound("walljump");
                         }
                     }
@@ -174,7 +175,7 @@ public class PlayerController : MonoBehaviour
                         if (IsOnWallLeft())
                         {
                             timer = maxLockoutTime;
-                            rb.velocity = new Vector2(speed, 1.5f * jumpForce);
+                            rb.velocity = new Vector2(speed, 1.2f * jumpForce);
                             SoundManagerScript.PlaySound("walljump");
 
                         }
@@ -273,6 +274,6 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = checkpoint.transform.position;
         GameObject.FindGameObjectWithTag("HUD").GetComponent<scr_UI>().DeathCount++;
-        cogwheels = 0;
+  
     }
 }

@@ -12,6 +12,7 @@ public class Rope_script : MonoBehaviour
     {
         if (col.gameObject.tag.Equals("Player"))
         {
+            SoundManagerScript.PlaySound("rope");
             hold = col.gameObject.GetComponent<PlayerController>();
             hold.hooks = hold.Gmax;
             
