@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ public class FallingSpike : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other){
             if(other.gameObject.CompareTag("Player")){
-            rb.AddForce(Vector2.down, (ForceMode2D.Impulse));
+            rb.AddForce(Vector2.down, ForceMode2D.Impulse);
         }
     }
 
